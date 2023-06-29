@@ -6,9 +6,9 @@ import Clock from "./../assets/sidebar/clock.svg";
 import User from "./../assets/sidebar/user.svg";
 import Category from "./../assets/sidebar/category.svg";
 import Chart from "./../assets/sidebar/chart.svg";
-import Book from "./../assets/sidebar/Book-open.svg";
-import Help from "./../assets/sidebar/Info-circle.svg";
-import Logout from "./../assets/sidebar/Logout.svg";
+import Book from "./../assets/sidebar/book-open.svg";
+import Help from "./../assets/sidebar/info-circle.svg";
+import Logout from "./../assets/sidebar/logout.svg";
 
 const Sidebar = () => {
 	return (
