@@ -31,7 +31,7 @@ const Sidebar = () => {
 					<li>
 						<NavLink
 							to="/courses"
-							className="flex gap-2 items-center block p-4 hover:bg-gray-700"
+							className="flex gap-2 items-center block p-4 hover:bg-gray-800 hover:text-white"
 						>
 							<img className="w-8 h-8" src={Book} alt="" />
 							Course Mangt.
@@ -40,7 +40,7 @@ const Sidebar = () => {
 					<li>
 						<NavLink
 							to="/history"
-							className="flex gap-2 items-center block p-4 hover:bg-gray-700"
+							className="flex gap-2 items-center block p-4 hover:bg-gray-800 hover:text-white"
 						>
 							<img className="w-8 h-8" src={Clock} alt="" />
 							Attendance History
@@ -49,7 +49,7 @@ const Sidebar = () => {
 					<li>
 						<NavLink
 							to="/report"
-							className="flex gap-2 items-center block p-4 hover:bg-gray-700"
+							className="flex gap-2 items-center block p-4 hover:bg-gray-800 hover:text-white"
 						>
 							<img className="w-8 h-8" src={Chart} alt="" />
 							Reports & Statistics
@@ -63,7 +63,7 @@ const Sidebar = () => {
 					<li>
 						<NavLink
 							to="/profile"
-							className="flex gap-2 items-center block p-4 hover:bg-gray-700"
+							className="flex gap-2 items-center block p-4 hover:bg-gray-800 hover:text-white"
 						>
 							<img className="w-8 h-8" src={User} alt="" />
 							Profile
@@ -72,7 +72,7 @@ const Sidebar = () => {
 					<li>
 						<NavLink
 							to="/help"
-							className="flex gap-2 items-center block p-4 hover:bg-gray-700"
+							className="flex gap-2 items-center block p-4 hover:bg-gray-800 hover:text-white"
 						>
 							<img className="w-8 h-8" src={Help} alt="" />
 							Help & Information
@@ -81,7 +81,7 @@ const Sidebar = () => {
 					<li>
 						<NavLink
 							to="/"
-							className="flex gap-2 items-center block p-4 hover:bg-gray-700"
+							className="flex gap-2 items-center block p-4 hover:bg-gray-800 hover:text-white"
 						>
 							<img className="w-8 h-8" src={Logout} alt="" />
 							Logout
