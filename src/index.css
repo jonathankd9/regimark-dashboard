@@ -1,0 +1,87 @@
+@import url("https://fonts.googleapis.com/css2?family=DM+Sans:ital,wght@0,400;0,500;0,700;1,400;1,500;1,700&display=swap");
+@import url("https://fonts.cdnfonts.com/css/satoshi");
+
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+:root {
+	font-family: "Satoshi", sans-serif;
+	line-height: 1.5;
+	font-weight: 400;
+	color: #444444;
+	background-color: #e5e5e5;
+
+	font-synthesis: none;
+	text-rendering: optimizeLegibility;
+	-webkit-font-smoothing: antialiased;
+	-moz-osx-font-smoothing: grayscale;
+	-webkit-text-size-adjust: 100%;
+}
+
+a {
+	font-weight: 500;
+	/* color: #646cff; */
+	text-decoration: inherit;
+}
+
+/* a:hover {
+	color: #535bf2;
+} */
+
+h1 {
+	font-size: 2em;
+	line-height: 2.69em;
+	font-family: "Satoshi", sans-serif;
+	font-weight: 700;
+}
+
+h2 {
+	font-size: 1.5em;
+	line-height: 2em;
+	font-family: "Satoshi", sans-serif;
+	font-weight: 700;
+}
+
+h3 {
+	font-size: 1.125em;
+	line-height: 1.6875em;
+	font-family: "Satoshi", sans-serif;
+	font-weight: 700;
+}
+
+button {
+	border-radius: 8px;
+	border: 1px solid transparent;
+	padding: 1em 1em;
+	width: 100%;
+	font-size: 1em;
+	font-weight: 700;
+	font-family: inherit;
+	cursor: pointer;
+	background-color: #1e1e1e;
+	color: white;
+}
+button:hover {
+}
+button:focus,
+button:focus-visible {
+	outline: 4px auto -webkit-focus-ring-color;
+}
+
+li {
+	color: #6f6f6f;
+	font-size: 1.6875em;
+}
+
+/* index.css */
+
+ul li a:hover {
+	color: #1e1e1e;
+	background-color: white;
+}
+
+ul li a.active {
+	color: #1e1e1e;
+	font-weight: 700;
+}
