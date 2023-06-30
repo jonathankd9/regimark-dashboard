@@ -1,5 +1,5 @@
 import React, { useState } from "react";
-// import axios from "axios";
+import axios from "axios";
 import { useNavigate } from "react-router-dom";
 
 const Login = () => {
@@ -15,25 +15,57 @@ const Login = () => {
 		setPassword(event.target.value);
 	};
 
+	// const handleSubmit = async (event) => {
+	// 	event.preventDefault();
+	// 	console.log(staffId);
+	// 	console.log(password);
+	// 	 try {
+	// 	 	const response = await axios.post("http://127.0.0.1:8000/api/auth/lecturer/login/", {
+	// 	 		lecturer_id: staffId,
+	// 	 		password: password,
+	// 	 	});
+
+	// 	// 	// Handle successful login
+	// 	 	console.log(response.data);
+
+	// 	//  Navigate to the Home Screen
+	// 	navigate("/home"); // Replace "/home" with the actual route to your Home Screen
+	// 	 } catch (error) {
+	// 	// 	// Handle login error
+	// 	 	console.error(error);
+	// 	 }
+	// };
+
 	const handleSubmit = async (event) => {
 		event.preventDefault();
 
-		// try {
-		// 	const response = await axios.post("<django_api_url>", {
-		// 		staff_id: staffId,
-		// 		password: password,
-		// 	});
+		try {
+			const response = await axios.post(
+			'http://127.0.0.1:8000/api/auth/lecturer/login/',
+			{
+				lecturer_id: staffId,
+				pin: password,
+			},
+			{
+				headers: {
+				'Content-Type': 'application/json',
+				// Add any additional headers if required
+				},
+			}
+			);
 
-		// 	// Handle successful login
-		// 	console.log(response.data);
+			// Handle successful login
+			console.log(response.data.message);
 
-		// Navigate to the Home Screen
-		navigate("/home"); // Replace "/home" with the actual route to your Home Screen
-		// } catch (error) {
-		// 	// Handle login error
-		// 	console.error(error);
-		// }
+			// Navigate to the Home Screen
+			// Replace "/home" with the actual route to your Home Screen
+			navigate('/home');
+		} catch (error) {
+			// Handle login error
+			console.error(error.response.data);
+		}
 	};
+
 
 	return (
 		<div className="container min-h-screen flex justify-center items-center">
