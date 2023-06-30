@@ -18,7 +18,7 @@ const Topbar = () => {
 		<div className="flex md:ml-80 p-4 bg-white justify-between items-center rounded-2xl">
 			<div className="flex gap-5 items-center">
 				<img className="w-16 h-16" src={Profile} alt="" />
-				<h1>Mrs. M. Wilson</h1>
+				<h1 className="md:flex sm:hidden">Mrs. M. Wilson</h1>
 			</div>
 			<div className=" text-neutral-700 text-[24px] font-medium">
 				{formattedDate}

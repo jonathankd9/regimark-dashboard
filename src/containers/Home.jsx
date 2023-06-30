@@ -32,7 +32,7 @@ const Home = () => {
 
 				{/* Inside contents */}
 				<div className="md:ml-80">
-					<div className="flex gap-5 mb-5">
+					<div className="flex gap-5 mb-5 md:flex-row sm:flex-col ">
 						{/* Left Section */}
 						<div className="p-10 basis-2/5 flex-col gap-y-4 h-4/12 bg-white rounded-2xl">
 							<div className="text-[20px] text-neutral-700 text-center">
@@ -68,7 +68,7 @@ const Home = () => {
 						</div>
 
 						{/* Right Section */}
-						<div className="flex gap-10 p-10 basis-3/5 h-4/12 bg-white rounded-2xl">
+						<div className="flex md:flex-row gap-10 p-10 basis-3/5 h-4/12 bg-white rounded-2xl sm:flex-col">
 							<div className="flex-1 flex flex-col gap-5 ">
 								<div className="flex justify-center">
 									<img className="w-64 h-64" src={QRContainer} alt="" />
