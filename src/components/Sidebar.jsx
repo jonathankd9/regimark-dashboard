@@ -1,7 +1,6 @@
 import React from "react";
 import { NavLink } from "react-router-dom";
 import Logo from "./../assets/logo.png";
-import { Link } from "react-router-dom";
 import Clock from "./../assets/sidebar/clock.svg";
 import User from "./../assets/sidebar/user.svg";
 import Category from "./../assets/sidebar/category.svg";
