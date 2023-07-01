@@ -5,7 +5,7 @@ import AuthContext from "./AuthProvider";
 export const ProtectedRoute = ({ children }) => {
 	const { isAuth } = useContext(AuthContext);
 	if (!isAuth) {
-		return <Navigate to="/login" />;
+		return <Navigate to="/" />;
 	}
 	return children;
 };

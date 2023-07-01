@@ -5,6 +5,7 @@ import QRContainer from "./../assets/qr-code-container.png";
 const Home = () => {
 	// Dropdown of courses
 
+
 	const [selectedOption, setSelectedOption] = useState("");
 
 	const handleSelectChange = (event) => {

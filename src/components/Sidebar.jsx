@@ -1,4 +1,4 @@
-import React from "react";
+import React, {useContext} from "react";
 import { NavLink } from "react-router-dom";
 import Logo from "./../assets/logo.png";
 import Clock from "./../assets/sidebar/clock.svg";
@@ -8,8 +8,10 @@ import Chart from "./../assets/sidebar/chart.svg";
 import Book from "./../assets/sidebar/book-open.svg";
 import Help from "./../assets/sidebar/info-circle.svg";
 import Logout from "./../assets/sidebar/logout.svg";
+import AuthContext from "../context/AuthProvider";
 
 const Sidebar = () => {
+	const {handleLogout} = useContext(AuthContext);
 	return (
 		<div className="fixed min-h-screen bg-white w-80 md:flex flex-col rounded-2xl sm:hidden">
 			<div className="p-4 flex justify-center">
@@ -79,7 +81,7 @@ const Sidebar = () => {
 					</li>
 					<li>
 						<NavLink
-							to="/"
+							onClick={handleLogout}
 							className="flex gap-2 items-center block p-4 hover:bg-gray-800 hover:text-white"
 						>
 							<img className="w-8 h-8" src={Logout} alt="" />

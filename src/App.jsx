@@ -11,6 +11,8 @@ import {
 	Report,
 } from "./containers";
 import { BrowserRouter } from "react-router-dom";
+import { ProtectedRoute } from "./context/ProtectedRoute";
+
 
 const App = () => {
 	return (
@@ -18,12 +20,12 @@ const App = () => {
 			<BrowserRouter>
 				<Routes>
 					<Route path="/" element={<Login />} />
-					<Route path="/home" element={<Home />} />
-					<Route path="/courses" element={<Courses />} />
-					<Route path="/history" element={<History />} />
-					<Route path="/report" element={<Report />} />
-					<Route path="/profile" element={<Profile />} />
-					<Route path="/help" element={<Help />} />
+					<Route path="/home" element={<ProtectedRoute><Home /></ProtectedRoute>} />
+					<Route path="/courses" element={<ProtectedRoute><Courses /></ProtectedRoute>} />
+					<Route path="/history" element={<ProtectedRoute><History /></ProtectedRoute>} />
+					<Route path="/report" element={<ProtectedRoute><Report /></ProtectedRoute>} />
+					<Route path="/profile" element={<ProtectedRoute><Profile /></ProtectedRoute>} />
+					<Route path="/help" element={<ProtectedRoute><Help /></ProtectedRoute>} />
 				</Routes>
 			</BrowserRouter>
 		</>
