@@ -1,13 +1,12 @@
 import React, { useState, useContext } from "react";
 import axios from "axios";
-import { useNavigate } from "react-router-dom";
 import AuthContext from "../context/AuthProvider";
 import { data } from "autoprefixer";
+
 const Login = () => {
 	const [staffId, setStaffId] = useState("");
 	const [password, setPassword] = useState("");
 	const { setIsAuth, setUserData } = useContext(AuthContext);
-
 
 	const handleStaffIdChange = (event) => {
 		setStaffId(event.target.value);
@@ -38,15 +37,15 @@ const Login = () => {
 			// Handle successful login
 			console.log(response.data.message);
 			const Data = response?.data?.data;
-			console.log(Data)
-			setUserData(Data)
+			console.log(Data);
+			setUserData(Data);
 			const token = response.data.token;
 			localStorage.setItem("token", token);
-			if(localStorage.token){
+			if (localStorage.token) {
 				setIsAuth(true);
 				setTimeout(() => {
 					window.location.href = "/home";
-				}, 2000)
+				}, 2000);
 			}
 		} catch (error) {
 			// Handle login error
