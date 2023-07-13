@@ -1,12 +1,12 @@
-import React, { useState, useContext } from "react";
+import React, {useState, useContext} from "react";
 import axios from "axios";
 import AuthContext from "../context/AuthProvider";
-import { data } from "autoprefixer";
+import {data} from "autoprefixer";
 
 const Login = () => {
 	const [staffId, setStaffId] = useState("");
 	const [password, setPassword] = useState("");
-	const { setIsAuth, setUserData } = useContext(AuthContext);
+	const {setIsAuth, setUserData} = useContext(AuthContext);
 
 	const handleStaffIdChange = (event) => {
 		setStaffId(event.target.value);
@@ -38,6 +38,10 @@ const Login = () => {
 			console.log(response.data.message);
 			const Data = response?.data?.data;
 			console.log(Data);
+
+			// Store additional data in local storage
+			localStorage.setItem("userData", JSON.stringify(Data));
+
 			setUserData(Data);
 			const token = response.data.token;
 			localStorage.setItem("token", token);

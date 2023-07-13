@@ -1,10 +1,34 @@
-import React, { useState } from "react";
-import { Sidebar, Topbar } from "../components";
+import React, {useState} from "react";
+import {Sidebar, Topbar} from "../components";
 import QRContainer from "./../assets/qr-code-container.png";
+import axios from "axios";
 
 const Home = () => {
 	// Dropdown of courses
 
+	const userData = JSON.parse(localStorage.getItem("userData"));
+
+	const [qrcodeUrl, setQRCodeUrl] = useState("");
+
+	const handleGenerateQRCode = async () => {
+		try {
+			// Make an API request to generate the QR code using the token from local storage
+			const token = localStorage.getItem("token");
+			const response = await axios.post(
+				"http://127.0.0.1:8000/api/dashboard/lecturer/generate-qrcode",
+				{
+					headers: {
+						Authorization: `Bearer ${token}`,
+					},
+				}
+			);
+
+			// Set the generated QR code URL in the state
+			setQRCodeUrl(response.data.qrcodeUrl);
+		} catch (error) {
+			console.error("Failed to generate QR code:", error);
+		}
+	};
 
 	const [selectedOption, setSelectedOption] = useState("");
 
@@ -13,13 +37,13 @@ const Home = () => {
 	};
 
 	const data = [
-		{ id: 1, name: "John Doe", age: 25, city: "New York", country: "USA" },
-		{ id: 2, name: "Jane Smith", age: 30, city: "London", country: "UK" },
-		{ id: 3, name: "Bob Johnson", age: 35, city: "Paris", country: "France" },
-		{ id: 3, name: "Bob Johnson", age: 35, city: "Paris", country: "France" },
-		{ id: 3, name: "Bob Johnson", age: 35, city: "Paris", country: "France" },
-		{ id: 3, name: "Bob Johnson", age: 35, city: "Paris", country: "France" },
-		{ id: 3, name: "Bob Johnson", age: 35, city: "Paris", country: "France" },
+		{id: 1, name: "John Doe", age: 25, city: "New York", country: "USA"},
+		{id: 2, name: "Jane Smith", age: 30, city: "London", country: "UK"},
+		{id: 3, name: "Bob Johnson", age: 35, city: "Paris", country: "France"},
+		{id: 3, name: "Bob Johnson", age: 35, city: "Paris", country: "France"},
+		{id: 3, name: "Bob Johnson", age: 35, city: "Paris", country: "France"},
+		{id: 3, name: "Bob Johnson", age: 35, city: "Paris", country: "France"},
+		{id: 3, name: "Bob Johnson", age: 35, city: "Paris", country: "France"},
 	];
 	return (
 		<div className="flex gap-5 md:m-5 sm:mt-5 sm:mr-5">
@@ -50,8 +74,7 @@ const Home = () => {
 								<select
 									value={selectedOption}
 									onChange={handleSelectChange}
-									className="text-[20px] w-full h-16 p-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-2 focus:ring-blue-500"
-								>
+									className="text-[20px] w-full h-16 p-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-2 focus:ring-blue-500">
 									<option value="">Select an option</option>
 									<option value="option1">
 										DCIT 406 - Advanced Networking
@@ -65,7 +88,7 @@ const Home = () => {
 									</p>
 								)}
 							</div>
-							<button>Generate</button>
+							<button onClick={handleGenerateQRCode}>Generate</button>
 						</div>
 
 						{/* Right Section */}
