@@ -8,25 +8,24 @@ const Home = () => {
 
 	const userData = JSON.parse(localStorage.getItem("userData"));
 
-	const [qrcodeUrl, setQRCodeUrl] = useState("");
+	const [qrCodeUrl, setQRCodeUrl] = useState("");
 
 	const handleGenerateQRCode = async () => {
 		try {
-			// Make an API request to generate the QR code using the token from local storage
-			const token = localStorage.getItem("token");
 			const response = await axios.post(
-				"http://127.0.0.1:8000/api/dashboard/lecturer/generate-qrcode",
+				"http://127.0.0.1:8000/api/dashboard/lecturer/generate-qrcode/",
+				{},
 				{
 					headers: {
-						Authorization: `Bearer ${token}`,
+						Authorization: `Token <token>`, // Replace <token> with the actual token value
 					},
 				}
 			);
 
-			// Set the generated QR code URL in the state
-			setQRCodeUrl(response.data.qrcodeUrl);
+			const qrCodeUrl = response.data.data.qr_code;
+			setQRCodeUrl(qrCodeUrl);
 		} catch (error) {
-			console.error("Failed to generate QR code:", error);
+			console.error("Error generating QR code:", error);
 		}
 	};
 
@@ -45,6 +44,7 @@ const Home = () => {
 		{id: 3, name: "Bob Johnson", age: 35, city: "Paris", country: "France"},
 		{id: 3, name: "Bob Johnson", age: 35, city: "Paris", country: "France"},
 	];
+
 	return (
 		<div className="flex gap-5 md:m-5 sm:mt-5 sm:mr-5">
 			<div className="">
@@ -76,11 +76,9 @@ const Home = () => {
 									onChange={handleSelectChange}
 									className="text-[20px] w-full h-16 p-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-2 focus:ring-blue-500">
 									<option value="">Select an option</option>
-									<option value="option1">
-										DCIT 406 - Advanced Networking
-									</option>
-									<option value="option2">Option 2</option>
-									<option value="option3">Option 3</option>
+									{userData?.courses.map((course, index) => (
+										<option key={index}>{course.course}</option>
+									))}
 								</select>
 								{selectedOption && (
 									<p className="text-green-600 mt-4">
@@ -88,14 +86,25 @@ const Home = () => {
 									</p>
 								)}
 							</div>
-							<button onClick={handleGenerateQRCode}>Generate</button>
+							<div>
+								<button onClick={handleGenerateQRCode}>Generate</button>
+								{qrCodeUrl && <img src={qrCodeUrl} alt="QR Code" />}
+							</div>{" "}
 						</div>
 
 						{/* Right Section */}
 						<div className="flex md:flex-row gap-10 p-10 basis-3/5 h-4/12 bg-white rounded-2xl sm:flex-col">
 							<div className="flex-1 flex flex-col gap-5 ">
 								<div className="flex justify-center">
-									<img className="w-64 h-64" src={QRContainer} alt="" />
+									<div className="flex justify-center">
+										{qrCodeUrl && (
+											<img
+												className="w-64 h-64"
+												src={qrCodeUrl}
+												alt="QR Code"
+											/>
+										)}
+									</div>{" "}
 								</div>
 								<div className="text-[24px] text-center">
 									<p className="">Time Left:</p>

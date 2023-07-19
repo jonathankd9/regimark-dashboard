@@ -32,11 +32,13 @@ const Profile = () => {
 					</div>
 					<div className="my-3">
 						<p class="text-neutral-400 text-xl font-normal">Levels Assigned</p>
-						{userData?.courses.map((course, index) => (
-							<p key={index} className="text-stone-900 text-2xl font-bold">
-								{course.level}
-							</p>
-						))}
+						{[...new Set(userData?.courses.map((course) => course.level))].map(
+							(level, index) => (
+								<p key={index} className="text-stone-900 text-2xl font-bold">
+									{level}
+								</p>
+							)
+						)}
 					</div>
 					<div className="my-3">
 						<p class="text-neutral-400 text-xl font-normal">
