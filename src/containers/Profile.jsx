@@ -21,13 +21,13 @@ const Profile = () => {
 					<div className="my-3">
 						<p class="text-neutral-400 text-xl font-normal ">Name</p>
 						<p class="text-stone-900 text-2xl font-bold">
-							{userData?.first_name} {userData?.last_name}
+							{userData?.user_info.first_name} {userData?.user_info.last_name}
 						</p>
 					</div>
 					<div className="my-3">
 						<p class="text-neutral-400 text-xl font-normal">Staff ID</p>
 						<p className="text-stone-900 text-2xl font-bold">
-							{userData?.user_id}
+							{userData?.user_info.user_id}
 						</p>
 					</div>
 					<div className="my-3">

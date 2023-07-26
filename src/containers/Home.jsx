@@ -1,31 +1,108 @@
-import React, {useState} from "react";
+import React, {useState, useRef, useEffect} from "react";
 import {Sidebar, Topbar} from "../components";
 import QRContainer from "./../assets/qr-code-container.png";
 import axios from "axios";
+import html2canvas from "html2canvas";
+import jsPDF from "jspdf";
 
 const Home = () => {
+	const divStyle = {
+		backgroundImage: `url(${QRContainer})`,
+	};
 	// Dropdown of courses
 
 	const userData = JSON.parse(localStorage.getItem("userData"));
 
-	const [qrCodeUrl, setQRCodeUrl] = useState("");
+	const [QRCodeUrl, setQRCodeUrl] = useState(null);
+	const [isQRCodeLoaded, setIsQRCodeLoaded] = useState(false); // Add the isQRCodeLoaded state
+	const [timeLeft, setTimeLeft] = useState(60); // Initial time in seconds
+	const [timerRunning, setTimerRunning] = useState(false); // To control the timer
+
+	const qrCodeRef = useRef(null);
+
+	// const handlePrintAsPDF = () => {
+	// 	if (!QRCodeUrl || !qrCodeRef.current) {
+	// 		return;
+	// 	}
+
+	// 	const qrCodeImg = qrCodeRef.current;
+	// 	const pdf = new jsPDF("p", "mm", "a4");
+
+	// 	html2canvas(qrCodeImg).then((canvas) => {
+	// 		const imageData = canvas.toDataURL("image/jpeg");
+	// 		pdf.addImage(imageData, "JPEG", 20, 20, 170, 170); // You can adjust the size and position of the QR code in the PDF
+	// 		pdf.save("QRCode.pdf");
+	// 	});
+	// };
+	const handlePrintAsPDF = () => {
+		if (!QRCodeUrl || !qrCodeRef.current || !isQRCodeLoaded) {
+			return;
+		}
+
+		const qrCodeImg = qrCodeRef.current;
+
+		html2canvas(qrCodeImg).then((canvas) => {
+			const imageData = canvas.toDataURL("image/jpeg");
+			const printWindow = window.open("", "_blank");
+			printWindow.document.open();
+			printWindow.document.write(
+				`<html><body><img src="${imageData}" style="max-width: 100%; max-height: 100%;" /></body></html>`
+			);
+			printWindow.document.close();
+
+			printWindow.onload = () => {
+				printWindow.print();
+				printWindow.close();
+			};
+		});
+	};
+
+	useEffect(() => {
+		if (timerRunning && timeLeft > 0) {
+			const timer = setTimeout(() => {
+				setTimeLeft((prevTime) => prevTime - 1);
+			}, 1000);
+
+			// Clean up the timer when the component is unmounted or the QR code is not generated
+			return () => clearTimeout(timer);
+		}
+	}, [timerRunning, timeLeft]);
 
 	const handleGenerateQRCode = async () => {
+		if (!selectedOption) {
+			// If no option is selected, do nothing
+			return;
+		}
 		try {
+			const requestData = {
+				lecturer: 1, // Replace with the actual lecturer value
+				course: 1, // Replace with the actual course value
+			};
+
 			const response = await axios.post(
 				"http://127.0.0.1:8000/api/dashboard/lecturer/generate-qrcode/",
-				{},
+				requestData,
+
 				{
 					headers: {
-						Authorization: `Token <token>`, // Replace <token> with the actual token value
+						Authorization: `Token 6e716a9c9824e7be5450a3084537e33f26738af0cb314d0d5ab8b0af2f9bb260`, // Replace <token> with the actual token value
 					},
+					// headers: {
+					// 	Authorization: `Token <token>`, // Replace <token> with the actual token value
+					// },
 				}
 			);
 
+			console.log("API Response:", response.data);
+
 			const qrCodeUrl = response.data.data.qr_code;
 			setQRCodeUrl(qrCodeUrl);
+
+			setTimerRunning(true);
+			setTimeLeft(60);
 		} catch (error) {
 			console.error("Error generating QR code:", error);
+			console.log("Response data:", error.response.data);
 		}
 	};
 
@@ -88,27 +165,28 @@ const Home = () => {
 							</div>
 							<div>
 								<button onClick={handleGenerateQRCode}>Generate</button>
-								{qrCodeUrl && <img src={qrCodeUrl} alt="QR Code" />}
-							</div>{" "}
+							</div>
 						</div>
 
 						{/* Right Section */}
 						<div className="flex md:flex-row gap-10 p-10 basis-3/5 h-4/12 bg-white rounded-2xl sm:flex-col">
 							<div className="flex-1 flex flex-col gap-5 ">
 								<div className="flex justify-center">
-									<div className="flex justify-center">
-										{qrCodeUrl && (
+									<div className="flex justify-center" style={divStyle}>
+										{QRCodeUrl && (
 											<img
-												className="w-64 h-64"
-												src={qrCodeUrl}
+												src={`http://127.0.0.1:8000${QRCodeUrl}`}
 												alt="QR Code"
+												className="qr-code"
+												ref={qrCodeRef}
+												onLoad={() => setIsQRCodeLoaded(true)} // Set isQRCodeLoaded to true when the image is loaded
 											/>
 										)}
 									</div>{" "}
 								</div>
 								<div className="text-[24px] text-center">
 									<p className="">Time Left:</p>
-									<p>59:00</p>
+									<p>{timeLeft > 0 ? `${timeLeft}:00` : "Time's Up!"}</p>
 								</div>
 							</div>
 							<div className="flex-1 flex flex-col gap-5">
@@ -116,7 +194,7 @@ const Home = () => {
 									<p className="font-bold">DCIT 406 - Advanced Networking</p>
 									<p>DCIT 406 - Advanced Networking</p>
 								</div>
-								<button>Print QR Code</button>
+								<button onClick={handlePrintAsPDF}>Print QR Code</button>
 								<button>End Class</button>
 							</div>
 						</div>
