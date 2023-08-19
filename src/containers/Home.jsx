@@ -6,12 +6,46 @@ import html2canvas from "html2canvas";
 import jsPDF from "jspdf";
 
 const Home = () => {
+	const userData = JSON.parse(localStorage.getItem("userData"));
+
+	const handlePrintQRCode = () => {
+		if (!isQRCodeLoaded) {
+			alert("QR code is not loaded yet. Please wait until it's loaded.");
+			return;
+		}
+
+		// Create a new image element with the QR code URL
+		const qrCodeImage = new Image();
+		qrCodeImage.src = `http://127.0.0.1:8000${QRCodeUrl}`;
+
+		// Create a new jsPDF instance
+		const pdf = new jsPDF("p", "mm", "a4");
+
+		// Calculate the width and height of the PDF to fit the image
+		const pdfWidth = 210;
+		const pdfHeight = (qrCodeImage.height * pdfWidth) / qrCodeImage.width;
+
+		// Add the QR code image to the PDF
+		pdf.addImage(qrCodeImage, "PNG", 0, 0, pdfWidth, pdfHeight);
+
+		// Add additional information to the PDF
+		const lecturerName = "";
+		const courseTitle = "";
+
+		// Set font size and add text to the PDF
+		pdf.setFontSize(12);
+		pdf.text(10, pdfHeight + 10, `Lecturer: ${lecturerName}`);
+		pdf.text(10, pdfHeight + 20, `Course Title: ${courseTitle}`);
+
+		// Open the browser's print dialog
+		pdf.autoPrint();
+		window.open(pdf.output("bloburl"), "_blank");
+	};
+
 	const divStyle = {
 		backgroundImage: `url(${QRContainer})`,
 	};
 	// Dropdown of courses
-
-	const userData = JSON.parse(localStorage.getItem("userData"));
 
 	const [QRCodeUrl, setQRCodeUrl] = useState(null);
 	const [isQRCodeLoaded, setIsQRCodeLoaded] = useState(false); // Add the isQRCodeLoaded state
@@ -19,43 +53,6 @@ const Home = () => {
 	const [timerRunning, setTimerRunning] = useState(false); // To control the timer
 
 	const qrCodeRef = useRef(null);
-
-	// const handlePrintAsPDF = () => {
-	// 	if (!QRCodeUrl || !qrCodeRef.current) {
-	// 		return;
-	// 	}
-
-	// 	const qrCodeImg = qrCodeRef.current;
-	// 	const pdf = new jsPDF("p", "mm", "a4");
-
-	// 	html2canvas(qrCodeImg).then((canvas) => {
-	// 		const imageData = canvas.toDataURL("image/jpeg");
-	// 		pdf.addImage(imageData, "JPEG", 20, 20, 170, 170); // You can adjust the size and position of the QR code in the PDF
-	// 		pdf.save("QRCode.pdf");
-	// 	});
-	// };
-	const handlePrintAsPDF = () => {
-		if (!QRCodeUrl || !qrCodeRef.current || !isQRCodeLoaded) {
-			return;
-		}
-
-		const qrCodeImg = qrCodeRef.current;
-
-		html2canvas(qrCodeImg).then((canvas) => {
-			const imageData = canvas.toDataURL("image/jpeg");
-			const printWindow = window.open("", "_blank");
-			printWindow.document.open();
-			printWindow.document.write(
-				`<html><body><img src="${imageData}" style="max-width: 100%; max-height: 100%;" /></body></html>`
-			);
-			printWindow.document.close();
-
-			printWindow.onload = () => {
-				printWindow.print();
-				printWindow.close();
-			};
-		});
-	};
 
 	useEffect(() => {
 		if (timerRunning && timeLeft > 0) {
@@ -85,7 +82,7 @@ const Home = () => {
 
 				{
 					headers: {
-						Authorization: `Token 6e716a9c9824e7be5450a3084537e33f26738af0cb314d0d5ab8b0af2f9bb260`, // Replace <token> with the actual token value
+						Authorization: `Token f37e4b1f751fdc080b56fd904a142b9711f2d752f5b179dd8ac1eafe5c3ec5b8`, // Replace <token> with the actual token value
 					},
 					// headers: {
 					// 	Authorization: `Token <token>`, // Replace <token> with the actual token value
@@ -143,7 +140,6 @@ const Home = () => {
 								</span>
 								<span className="font-bold leading-loose">“Generate”</span>
 								<span className=" font-normal leading-loose">
-									{" "}
 									button below to generate unique QR Code for marking attendance
 								</span>
 							</div>
@@ -154,7 +150,9 @@ const Home = () => {
 									className="text-[20px] w-full h-16 p-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-2 focus:ring-blue-500">
 									<option value="">Select an option</option>
 									{userData?.courses.map((course, index) => (
-										<option key={index}>{course.course}</option>
+										<option key={index}>
+											{course.code} - {course.title}{" "}
+										</option>
 									))}
 								</select>
 								{selectedOption && (
@@ -179,10 +177,12 @@ const Home = () => {
 												alt="QR Code"
 												className="qr-code"
 												ref={qrCodeRef}
-												onLoad={() => setIsQRCodeLoaded(true)} // Set isQRCodeLoaded to true when the image is loaded
+												onLoad={() => setIsQRCodeLoaded(true)}
+												// Set isQRCodeLoaded to true when the image is loaded
+												style={{border: "1px solid red"}} // Add a border for visibility
 											/>
 										)}
-									</div>{" "}
+									</div>
 								</div>
 								<div className="text-[24px] text-center">
 									<p className="">Time Left:</p>
@@ -194,7 +194,7 @@ const Home = () => {
 									<p className="font-bold">DCIT 406 - Advanced Networking</p>
 									<p>DCIT 406 - Advanced Networking</p>
 								</div>
-								<button onClick={handlePrintAsPDF}>Print QR Code</button>
+								<button onClick={handlePrintQRCode}>Print QR Code</button>
 								<button>End Class</button>
 							</div>
 						</div>

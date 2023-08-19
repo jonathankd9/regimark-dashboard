@@ -46,7 +46,7 @@ const Profile = () => {
 						</p>
 						{userData?.courses.map((course, index) => (
 							<p key={index} className="text-stone-900 text-2xl font-bold">
-								{course.course}
+								{course.code} - {course.title}
 							</p>
 						))}
 					</div>

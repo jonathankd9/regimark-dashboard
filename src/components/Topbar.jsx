@@ -23,7 +23,7 @@ const Topbar = () => {
 			<div className="flex gap-5 items-center">
 				<img className="w-16 h-16" src={Profile} alt="" />
 				<h1 className="md:flex sm:hidden">
-					{userData?.user_info.first_name} {""} {userData?.user_info.last_name}{" "}
+					{userData?.user_info.first_name} {""} {userData?.user_info.last_name}
 				</h1>
 			</div>
 			<div className="text-neutral-700 text-[24px] font-medium">
