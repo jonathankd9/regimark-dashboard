@@ -6,6 +6,20 @@ import html2canvas from "html2canvas";
 import jsPDF from "jspdf";
 
 const Home = () => {
+	const handleEndClass = () => {
+		setTimerRunning(false); // Stop the timer
+		setTimeLeft(60); // Reset the timer to its initial value
+		setQRCodeUrl(null); // Clear the QR code URL
+	};
+
+	const currentDate = new Date();
+	const options = {
+		year: "numeric",
+		month: "long",
+		day: "numeric",
+	};
+	const formattedDate = currentDate.toLocaleDateString(undefined, options);
+
 	const userData = JSON.parse(localStorage.getItem("userData"));
 
 	const handlePrintQRCode = () => {
@@ -33,7 +47,7 @@ const Home = () => {
 		const courseTitle = "";
 
 		// Set font size and add text to the PDF
-		pdf.setFontSize(12);
+		pdf.setFontSize(20);
 		pdf.text(10, pdfHeight + 10, `Lecturer: ${lecturerName}`);
 		pdf.text(10, pdfHeight + 20, `Course Title: ${courseTitle}`);
 
@@ -107,6 +121,17 @@ const Home = () => {
 
 	const handleSelectChange = (event) => {
 		setSelectedOption(event.target.value);
+
+		// Update courseTitle based on the selected option
+		const selectedCourse = userData?.courses.find((course) => {
+			return `${course.code} - ${course.title}` === event.target.value;
+		});
+
+		if (selectedCourse) {
+			setCourseTitle(selectedCourse.title);
+		} else {
+			setCourseTitle(""); // Reset to empty if no course is selected
+		}
 	};
 
 	const data = [
@@ -191,11 +216,14 @@ const Home = () => {
 							</div>
 							<div className="flex-1 flex flex-col gap-5">
 								<div className="text-[24px]">
-									<p className="font-bold">DCIT 406 - Advanced Networking</p>
-									<p>DCIT 406 - Advanced Networking</p>
+									<p className="font-bold">
+										{selectedOption ? selectedOption : "No Course Selected"}
+									</p>
+									<p>{formattedDate}</p>
 								</div>
+
 								<button onClick={handlePrintQRCode}>Print QR Code</button>
-								<button>End Class</button>
+								<button onClick={handleEndClass}>End Class</button>
 							</div>
 						</div>
 					</div>
