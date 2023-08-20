@@ -21,7 +21,7 @@ const Login = () => {
 
 		try {
 			const response = await axios.post(
-				"http://jkd6735.pythonanywhere.com/api/auth/lecturer/login/",
+				"https://jkd6735.pythonanywhere.com/api/auth/lecturer/login/",
 				{
 					lecturer_id: staffId,
 					pin: password,
