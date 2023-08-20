@@ -26,7 +26,7 @@ const Home = () => {
 			</head>
 			<body style="text-align: center;">
 			  <h2>QR Code Preview</h2>
-			  <img src="http://127.0.0.1:8000${QRCodeUrl}" alt="QR Code" />
+			  <img src="https://jkd6735.pythonanywhere.com${QRCodeUrl}" alt="QR Code" />
 			  <p>Click the image to close this preview.</p>
 			</body>
 		  </html>
@@ -64,7 +64,7 @@ const Home = () => {
 
 		// Create a new image element with the QR code URL
 		const qrCodeImage = new Image();
-		qrCodeImage.src = `http://127.0.0.1:8000${QRCodeUrl}`;
+		qrCodeImage.src = `https://jkd6735.pythonanywhere.com${QRCodeUrl}`;
 
 		// Create a new jsPDF instance
 		const pdf = new jsPDF("p", "mm", "a4");
@@ -125,7 +125,7 @@ const Home = () => {
 			};
 
 			const response = await axios.post(
-				"http://127.0.0.1:8000/api/dashboard/lecturer/generate-qrcode/",
+				"https://jkd6735.pythonanywhere.com/api/dashboard/lecturer/generate-qrcode/",
 				requestData,
 
 				{
@@ -232,7 +232,7 @@ const Home = () => {
 									<div className="flex justify-center" style={divStyle}>
 										{QRCodeUrl && (
 											<img
-												src={`http://127.0.0.1:8000${QRCodeUrl}`}
+												src={`https://jkd6735.pythonanywhere.com${QRCodeUrl}`}
 												alt="QR Code"
 												className="qr-code"
 												ref={qrCodeRef}
