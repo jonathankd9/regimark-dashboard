@@ -1,7 +1,7 @@
 import React, {useState, useContext} from "react";
 import axios from "axios";
 import AuthContext from "../context/AuthProvider";
-import {data} from "autoprefixer";
+// import {data} from "autoprefixer";
 
 const Login = () => {
 	const [staffId, setStaffId] = useState("");
@@ -21,7 +21,7 @@ const Login = () => {
 
 		try {
 			const response = await axios.post(
-				"http://127.0.0.1:8000/api/auth/lecturer/login/",
+				"http://jkd6735.pythonanywhere.com/api/auth/lecturer/login/",
 				{
 					lecturer_id: staffId,
 					pin: password,
@@ -60,7 +60,7 @@ const Login = () => {
 	return (
 		<div className="container min-h-screen flex justify-center items-center">
 			{/* Box */}
-			<div className="bg-white md:w-1/2 rounded-2xl">
+			<div className="bg-white md:w-3/5 rounded-2xl">
 				<div className="bg-primary rounded-t-2xl py-5">
 					<h1 className="text-white text-center md:text-[36px] sm:text-2xl">
 						QRMark - Dashboard

@@ -6,6 +6,40 @@ import html2canvas from "html2canvas";
 import jsPDF from "jspdf";
 
 const Home = () => {
+	const handlePreviewQRCode = () => {
+		if (!isQRCodeLoaded) {
+			alert("QR code is not loaded yet. Please wait until it's loaded.");
+			return;
+		}
+
+		// Create a new window to display the QR code in a larger size
+		const previewWindow = window.open("", "_blank");
+		previewWindow.document.open();
+		previewWindow.document.write(`
+		  <html>
+			<head>
+			  <title>QR Code Preview</title>
+			  <style>
+            body { margin: 0; overflow: hidden; }
+            img { width: 100%; height: 100vh; object-fit: contain; cursor: pointer; }
+          </style>
+			</head>
+			<body style="text-align: center;">
+			  <h2>QR Code Preview</h2>
+			  <img src="http://127.0.0.1:8000${QRCodeUrl}" alt="QR Code" />
+			  <p>Click the image to close this preview.</p>
+			</body>
+		  </html>
+		`);
+		previewWindow.document.close();
+
+		// Close the preview window when the user clicks the QR code
+		previewWindow.document
+			.querySelector("img")
+			.addEventListener("click", () => {
+				previewWindow.close();
+			});
+	};
 	const handleEndClass = () => {
 		setTimerRunning(false); // Stop the timer
 		setTimeLeft(60); // Reset the timer to its initial value
@@ -96,7 +130,7 @@ const Home = () => {
 
 				{
 					headers: {
-						Authorization: `Token f37e4b1f751fdc080b56fd904a142b9711f2d752f5b179dd8ac1eafe5c3ec5b8`, // Replace <token> with the actual token value
+						Authorization: `Token 6cd0b97d45cad977159d6c890d1ffbbd8523526038169897fd92e2932021b080`, // Replace <token> with the actual token value
 					},
 					// headers: {
 					// 	Authorization: `Token <token>`, // Replace <token> with the actual token value
@@ -222,6 +256,7 @@ const Home = () => {
 									<p>{formattedDate}</p>
 								</div>
 
+								<button onClick={handlePreviewQRCode}>Preview QR Code</button>
 								<button onClick={handlePrintQRCode}>Print QR Code</button>
 								<button onClick={handleEndClass}>End Class</button>
 							</div>
