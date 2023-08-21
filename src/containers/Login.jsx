@@ -48,6 +48,8 @@ const Login = () => {
 			if (localStorage.token) {
 				setIsAuth(true);
 				setTimeout(() => {
+					// Redirect
+					console.log("Redirecting to /home");
 					window.location.href = "/home";
 				}, 2000);
 			}
