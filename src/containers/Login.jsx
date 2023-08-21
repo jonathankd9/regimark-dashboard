@@ -49,8 +49,7 @@ const Login = () => {
 				setIsAuth(true);
 				setTimeout(() => {
 					// Redirect
-					console.log("Redirecting to /home");
-					window.location.href = "/profile";
+					window.location.href = "/home";
 				}, 2000);
 			}
 		} catch (error) {
