@@ -6,6 +6,8 @@ import html2canvas from "html2canvas";
 import jsPDF from "jspdf";
 
 const Home = () => {
+	const BASE_URL = "https://jkd6735.pythonanywhere.com";
+
 	const handlePreviewQRCode = () => {
 		if (!isQRCodeLoaded) {
 			alert("QR code is not loaded yet. Please wait until it's loaded.");
@@ -26,7 +28,7 @@ const Home = () => {
 			</head>
 			<body style="text-align: center;">
 			  <h2>QR Code Preview</h2>
-			  <img src="https://jkd6735.pythonanywhere.com${QRCodeUrl}" alt="QR Code" />
+			  <img src="${BASE_URL}${QRCodeUrl}" alt="QR Code" />
 			  <p>Click the image to close this preview.</p>
 			</body>
 		  </html>
@@ -64,7 +66,7 @@ const Home = () => {
 
 		// Create a new image element with the QR code URL
 		const qrCodeImage = new Image();
-		qrCodeImage.src = `https://jkd6735.pythonanywhere.com${QRCodeUrl}`;
+		qrCodeImage.src = `${BASE_URL}${QRCodeUrl}`;
 
 		// Create a new jsPDF instance
 		const pdf = new jsPDF("p", "mm", "a4");
@@ -125,20 +127,21 @@ const Home = () => {
 			};
 
 			const response = await axios.post(
-				"https://jkd6735.pythonanywhere.com/api/dashboard/lecturer/generate-qrcode/",
+				`${BASE_URL}/api/dashboard/lecturer/generate-qrcode/`,
 				requestData,
 
 				{
-					headers: {
-						Authorization: `Token 6cd0b97d45cad977159d6c890d1ffbbd8523526038169897fd92e2932021b080`, // Replace <token> with the actual token value
-					},
-					// headers: {
-					// 	Authorization: `Token <token>`, // Replace <token> with the actual token value
-					// },
+					headers: {},
 				}
 			);
 
 			console.log("API Response:", response.data);
+
+			// Extract the token from the response
+			const token = response.data.token;
+
+			// Set the token in your state or wherever you want to store it
+			localStorage.setItem("token", token);
 
 			const qrCodeUrl = response.data.data.qr_code;
 			setQRCodeUrl(qrCodeUrl);
@@ -232,7 +235,7 @@ const Home = () => {
 									<div className="flex justify-center" style={divStyle}>
 										{QRCodeUrl && (
 											<img
-												src={`https://jkd6735.pythonanywhere.com${QRCodeUrl}`}
+												src={`${BASE_URL}${QRCodeUrl}`}
 												alt="QR Code"
 												className="qr-code"
 												ref={qrCodeRef}

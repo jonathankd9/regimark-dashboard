@@ -28,16 +28,16 @@ const Login = () => {
 				},
 				{
 					headers: {
-						"Content-Type": "application/json",
+						// "Content-Type": "application/json",
 						// Add any additional headers if required
 					},
 				}
 			);
 
 			// Handle successful login
-			console.log(response.data.message);
+			// console.log(response.data.message);
 			const Data = response?.data?.data;
-			console.log(Data);
+			// console.log(Data);
 
 			// Store additional data in local storage
 			localStorage.setItem("userData", JSON.stringify(Data));
