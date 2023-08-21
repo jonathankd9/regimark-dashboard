@@ -50,7 +50,7 @@ const Login = () => {
 				setTimeout(() => {
 					// Redirect
 					console.log("Redirecting to /home");
-					window.location.href = "/home";
+					window.location.href = "/profile";
 				}, 2000);
 			}
 		} catch (error) {
