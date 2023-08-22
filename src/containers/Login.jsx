@@ -1,4 +1,4 @@
-import React, {useState, useContext} from "react";
+import React, {useState, useContext, useEffect} from "react";
 import axios from "axios";
 import AuthContext from "../context/AuthProvider";
 // import {data} from "autoprefixer";
@@ -37,6 +37,9 @@ const Login = () => {
 				{
 					lecturer_id: staffId,
 					pin: password,
+
+					// lecturer_id: "10826194", // Hardcoded staffId
+					// pin: "12345", // Hardcoded password
 				},
 				{
 					headers: {
@@ -69,6 +72,11 @@ const Login = () => {
 			console.error(error.response.data);
 		}
 	};
+
+	// Use useEffect to automatically submit the form when the component mounts
+	// useEffect(() => {
+	// 	handleSubmit(setIsAuth, setUserData);
+	// }, []);
 
 	return (
 		<div className="container min-h-screen flex justify-center items-center">
