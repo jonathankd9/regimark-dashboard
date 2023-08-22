@@ -9,6 +9,7 @@ const Login = () => {
 	const {setIsAuth, setUserData} = useContext(AuthContext);
 
 	const [errorMessage, setErrorMessage] = useState(""); // State to hold the error message
+	const [isLoading, setIsLoading] = useState(false); // State to manage loading state
 
 	const handleStaffIdChange = (event) => {
 		setStaffId(event.target.value);
@@ -70,6 +71,9 @@ const Login = () => {
 		} catch (error) {
 			// Handle login error
 			console.error(error.response.data);
+			setErrorMessage("Login failed. Please check your credentials."); // Set error message on login failure
+		} finally {
+			setIsLoading(false); // Set loading to false when the request completes (whether success or error)
 		}
 	};
 
