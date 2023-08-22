@@ -8,20 +8,32 @@ const Login = () => {
 	const [password, setPassword] = useState("");
 	const {setIsAuth, setUserData} = useContext(AuthContext);
 
+	const [errorMessage, setErrorMessage] = useState(""); // State to hold the error message
+
 	const handleStaffIdChange = (event) => {
 		setStaffId(event.target.value);
+		// Clear the error message when the user starts typing
+		setErrorMessage("");
 	};
 
 	const handlePasswordChange = (event) => {
 		setPassword(event.target.value);
+		// Clear the error message when the user starts typing
+		setErrorMessage("");
 	};
 
 	const handleSubmit = async (event) => {
 		event.preventDefault();
 
+		if (!staffId || !password) {
+			setErrorMessage("No Staff Id or pin"); // Set the error message
+			return;
+		}
+
 		try {
 			const response = await axios.post(
 				"https://jkd6735.pythonanywhere.com/api/auth/lecturer/login/",
+				// "http://127.0.0.1:8000/api/auth/lecturer/login/",
 				{
 					lecturer_id: staffId,
 					pin: password,
@@ -105,6 +117,10 @@ const Login = () => {
 								/>
 							</div>
 						</div>
+
+						{/* Displaying error  */}
+						{/* Display the error message if it's not empty */}
+						{errorMessage && <div className="text-red-500">{errorMessage}</div>}
 
 						{/* Button */}
 						<button onClick={handleSubmit} className="my-10">
