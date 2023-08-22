@@ -1,7 +1,6 @@
 import React, {useState, useContext, useEffect} from "react";
 import axios from "axios";
 import AuthContext from "../context/AuthProvider";
-// import {data} from "autoprefixer";
 
 const Login = () => {
 	const [staffId, setStaffId] = useState("");
@@ -24,34 +23,34 @@ const Login = () => {
 	};
 
 	const handleSubmit = async (event) => {
-		event.preventDefault();
+		// event.preventDefault();
 
-		if (!staffId || !password) {
-			setErrorMessage("No Staff Id or pin"); // Set the error message
-			return;
-		}
+		// if (!staffId || !password) {
+		// 	setErrorMessage("No Staff Id or pin"); // Set the error message
+		// 	return;
+		// }
 
 		try {
 			const response = await axios.post(
 				"https://jkd6735.pythonanywhere.com/api/auth/lecturer/login/",
 				// "http://127.0.0.1:8000/api/auth/lecturer/login/",
 				{
-					lecturer_id: staffId,
-					pin: password,
+					// lecturer_id: staffId,
+					// pin: password,
 
-					// lecturer_id: "10826194", // Hardcoded staffId
-					// pin: "12345", // Hardcoded password
+					lecturer_id: "10826194", // Hardcoded staffId
+					pin: "12345", // Hardcoded password
 				},
 				{
 					headers: {
-						// "Content-Type": "application/json",
+						"Content-Type": "application/json",
 						// Add any additional headers if required
 					},
 				}
 			);
 
 			// Handle successful login
-			// console.log(response.data.message);
+			console.log(response.data.message);
 			const Data = response?.data?.data;
 			// console.log(Data);
 
@@ -78,9 +77,9 @@ const Login = () => {
 	};
 
 	// Use useEffect to automatically submit the form when the component mounts
-	// useEffect(() => {
-	// 	handleSubmit(setIsAuth, setUserData);
-	// }, []);
+	useEffect(() => {
+		handleSubmit(setIsAuth, setUserData);
+	}, []);
 
 	return (
 		<div className="container min-h-screen flex justify-center items-center">
