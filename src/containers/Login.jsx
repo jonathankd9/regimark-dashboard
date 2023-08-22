@@ -135,9 +135,13 @@ const Login = () => {
 						{errorMessage && <div className="text-red-500">{errorMessage}</div>}
 
 						{/* Button */}
-						<button onClick={handleSubmit} className="my-10">
-							Login
-						</button>
+						{isLoading ? (
+							<div className="text-primary text-center my-2">Logging in...</div>
+						) : (
+							<button onClick={handleSubmit} className="my-10">
+								Login
+							</button>
+						)}
 					</form>
 				</div>
 			</div>
