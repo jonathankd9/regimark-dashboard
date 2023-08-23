@@ -35,11 +35,11 @@ const Login = () => {
 				"https://jkd6735.pythonanywhere.com/api/auth/lecturer/login/",
 				// "http://127.0.0.1:8000/api/auth/lecturer/login/",
 				{
-					// lecturer_id: staffId,
-					// pin: password,
+					lecturer_id: staffId,
+					pin: password,
 
-					lecturer_id: "10824603", // Hardcoded staffId
-					pin: "12345", // Hardcoded password
+					// lecturer_id: "10824603", // Hardcoded staffId
+					// pin: "12345", // Hardcoded password
 				},
 				{
 					headers: {
