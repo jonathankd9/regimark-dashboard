@@ -38,7 +38,7 @@ const Login = () => {
 					// lecturer_id: staffId,
 					// pin: password,
 
-					lecturer_id: "10826194", // Hardcoded staffId
+					lecturer_id: "10824603", // Hardcoded staffId
 					pin: "12345", // Hardcoded password
 				},
 				{
