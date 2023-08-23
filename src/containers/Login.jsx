@@ -23,7 +23,7 @@ const Login = () => {
 	};
 
 	const handleSubmit = async (event) => {
-		// event.preventDefault();
+		event.preventDefault();
 
 		// if (!staffId || !password) {
 		// 	setErrorMessage("No Staff Id or pin"); // Set the error message
@@ -77,9 +77,9 @@ const Login = () => {
 	};
 
 	// Use useEffect to automatically submit the form when the component mounts
-	useEffect(() => {
-		handleSubmit(setIsAuth, setUserData);
-	}, []);
+	// useEffect(() => {
+	// 	handleSubmit(setIsAuth, setUserData);
+	// }, []);
 
 	return (
 		<div className="container min-h-screen flex justify-center items-center">
