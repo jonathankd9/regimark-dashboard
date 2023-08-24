@@ -25,10 +25,10 @@ const Login = () => {
 	const handleSubmit = async (event) => {
 		event.preventDefault();
 
-		// if (!staffId || !password) {
-		// 	setErrorMessage("No Staff Id or pin"); // Set the error message
-		// 	return;
-		// }
+		if (!staffId || !password) {
+			setErrorMessage("No Staff Id or pin"); // Set the error message
+			return;
+		}
 
 		try {
 			const response = await axios.post(
