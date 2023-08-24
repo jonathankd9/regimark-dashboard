@@ -44,7 +44,7 @@ const Home = () => {
 	};
 	const handleEndClass = () => {
 		setTimerRunning(false); // Stop the timer
-		setTimeLeft(60); // Reset the timer to its initial value
+		setTimeLeft(300); // Reset the timer to its initial value
 		setQRCodeUrl(null); // Clear the QR code URL
 	};
 
@@ -95,12 +95,14 @@ const Home = () => {
 	const divStyle = {
 		backgroundImage: `url(${QRContainer})`,
 	};
-	// Dropdown of courses
 
 	const [QRCodeUrl, setQRCodeUrl] = useState(null);
 	const [isQRCodeLoaded, setIsQRCodeLoaded] = useState(false); // Add the isQRCodeLoaded state
-	const [timeLeft, setTimeLeft] = useState(60); // Initial time in seconds
+	const [timeLeft, setTimeLeft] = useState(300); // Initial time in seconds
 	const [timerRunning, setTimerRunning] = useState(false); // To control the timer
+
+	const minutesLeft = Math.floor(timeLeft / 60);
+	const secondsLeft = timeLeft % 60;
 
 	const qrCodeRef = useRef(null);
 
@@ -143,11 +145,16 @@ const Home = () => {
 			// Set the token in your state or wherever you want to store it
 			localStorage.setItem("token", token);
 
-			const qrCodeUrl = response.data.data.qr_code;
+			console.log(response.data.data);
+
+			// const qrCodeUrl = response.data.data.qr_code;
+			const qrCodeUrl = response.data.data;
 			setQRCodeUrl(qrCodeUrl);
 
+			// console.log(qrCodeUrl);
+
 			setTimerRunning(true);
-			setTimeLeft(60);
+			setTimeLeft(300);
 		} catch (error) {
 			console.error("Error generating QR code:", error);
 			console.log("Response data:", error.response.data);
@@ -198,7 +205,7 @@ const Home = () => {
 						<div className="p-10 basis-2/5 flex-col gap-y-4 h-4/12 bg-white rounded-2xl">
 							<div className="text-[20px] text-neutral-700 text-center">
 								<span className="font-normal leading-loose">
-									Select a course and then click{" "}
+									Select a course and then click
 								</span>
 								<span className="font-bold leading-loose">“Generate”</span>
 								<span className=" font-normal leading-loose">
@@ -219,7 +226,7 @@ const Home = () => {
 								</select>
 								{selectedOption && (
 									<p className="text-green-600 mt-4">
-										Selected option: {selectedOption}
+										Selected Course: {selectedOption}
 									</p>
 								)}
 							</div>
@@ -247,8 +254,15 @@ const Home = () => {
 									</div>
 								</div>
 								<div className="text-[24px] text-center">
+									{/* <p className="">Time Left:</p>
+									<p>{timeLeft > 0 ? `${timeLeft}:00` : "Time's Up!"}</p> */}
+
 									<p className="">Time Left:</p>
-									<p>{timeLeft > 0 ? `${timeLeft}:00` : "Time's Up!"}</p>
+									<p>
+										{timeLeft > 0
+											? `${minutesLeft} min ${secondsLeft} sec`
+											: "Time's Up!"}
+									</p>
 								</div>
 							</div>
 							<div className="flex-1 flex flex-col gap-5">
