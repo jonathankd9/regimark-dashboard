@@ -139,7 +139,7 @@ const Home = () => {
 
 			console.log("API Response:", response.data);
 
-			// Extract the token from the response
+			// Extract the token from the response, cool
 			const token = response.data.token;
 
 			// Set the token in your state or wherever you want to store it
