@@ -5,12 +5,21 @@ import axios from "axios";
 import html2canvas from "html2canvas";
 import jsPDF from "jspdf";
 
+// Loading
+import {Dots} from "react-activity";
+import {Sentry} from "react-activity";
+import {Spinner} from "react-activity";
+import "react-activity/dist/library.css";
+
 const Home = () => {
+	const [isLoading, setIsLoading] = useState(false); // State to manage loading state
+
 	const BASE_URL = "https://jkd6735.pythonanywhere.com";
 
 	const handlePreviewQRCode = () => {
 		if (!isQRCodeLoaded) {
 			alert("QR code is not loaded yet. Please wait until it's loaded.");
+
 			return;
 		}
 
@@ -34,7 +43,6 @@ const Home = () => {
 		  </html>
 		`);
 		previewWindow.document.close();
-
 		// Close the preview window when the user clicks the QR code
 		previewWindow.document
 			.querySelector("img")
@@ -42,6 +50,7 @@ const Home = () => {
 				previewWindow.close();
 			});
 	};
+
 	const handleEndClass = () => {
 		setTimerRunning(false); // Stop the timer
 		setTimeLeft(300); // Reset the timer to its initial value
@@ -78,23 +87,27 @@ const Home = () => {
 		// Add the QR code image to the PDF
 		pdf.addImage(qrCodeImage, "PNG", 0, 0, pdfWidth, pdfHeight);
 
-		// Add additional information to the PDF
-		const lecturerName = "";
-		const courseTitle = "";
+		// Use lecturer's first name from userData
+		const lecturerFirst = userData?.user_info.first_name || ""; // Default to an empty string if not available
+		const lecturerSecond = userData?.user_info.last_name || ""; // Default to an empty string if not available
 
 		// Set font size and add text to the PDF
 		pdf.setFontSize(20);
-		pdf.text(10, pdfHeight + 10, `Lecturer: ${lecturerName}`);
-		pdf.text(10, pdfHeight + 20, `Course Title: ${courseTitle}`);
+		pdf.text(
+			10,
+			pdfHeight + 10,
+			`Lecturer: ${lecturerFirst} ${lecturerSecond}`
+		);
+		pdf.text(10, pdfHeight + 20, `Course Title: ${selectedOption}`);
 
 		// Open the browser's print dialog
 		pdf.autoPrint();
 		window.open(pdf.output("bloburl"), "_blank");
 	};
 
-	const divStyle = {
-		backgroundImage: `url(${QRContainer})`,
-	};
+	// const divStyle = {
+	// 	backgroundImage: `url(${QRContainer})`,
+	// };
 
 	const [QRCodeUrl, setQRCodeUrl] = useState(null);
 	const [isQRCodeLoaded, setIsQRCodeLoaded] = useState(false); // Add the isQRCodeLoaded state
@@ -105,6 +118,7 @@ const Home = () => {
 	const secondsLeft = timeLeft % 60;
 
 	const qrCodeRef = useRef(null);
+	const [errorMessage, setErrorMessage] = useState(""); // State to hold the error message
 
 	useEffect(() => {
 		if (timerRunning && timeLeft > 0) {
@@ -123,6 +137,8 @@ const Home = () => {
 			return;
 		}
 		try {
+			setIsLoading(true);
+
 			const requestData = {
 				lecturer: 1, // Replace with the actual lecturer value
 				course: 1, // Replace with the actual course value
@@ -151,17 +167,24 @@ const Home = () => {
 			const qrCodeUrl = response.data.data;
 			setQRCodeUrl(qrCodeUrl);
 
-			// console.log(qrCodeUrl);
+			// Log the QR code data
+			console.log(qrCodeUrl);
 
 			setTimerRunning(true);
 			setTimeLeft(300);
 		} catch (error) {
 			console.error("Error generating QR code:", error);
 			console.log("Response data:", error.response.data);
+
+			setErrorMessage("QR Code failed to generate."); // Set error message on login failure
+		} finally {
+			setIsLoading(false);
 		}
 	};
 
 	const [selectedOption, setSelectedOption] = useState("");
+	const [courseTitle, setCourseTitle] = useState("");
+	const [courseCode, setcourseCode] = useState("");
 
 	const handleSelectChange = (event) => {
 		setSelectedOption(event.target.value);
@@ -217,7 +240,7 @@ const Home = () => {
 									value={selectedOption}
 									onChange={handleSelectChange}
 									className="text-[20px] w-full h-16 p-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-2 focus:ring-blue-500">
-									<option value="">Select an option</option>
+									<option value="Select an option">Select an option</option>
 									{userData?.courses.map((course, index) => (
 										<option key={index}>
 											{course.code} - {course.title}{" "}
@@ -231,15 +254,34 @@ const Home = () => {
 								)}
 							</div>
 							<div>
-								<button onClick={handleGenerateQRCode}>Generate</button>
+								{/* <button onClick={handleGenerateQRCode}>Generate</button> */}
+
+								{isLoading ? (
+									<button className="flex gap-3 text-center items-center justify-center">
+										<div>
+											<Spinner className="mx-auto" size={20} />
+										</div>
+										<p>Generating QRCode...</p>
+									</button>
+								) : (
+									<button onClick={handleGenerateQRCode} className="my-10">
+										{isLoading ? "Generating QRcode" : "Generate"}
+									</button>
+								)}
 							</div>
 						</div>
 
 						{/* Right Section */}
 						<div className="flex md:flex-row gap-10 p-10 basis-3/5 h-4/12 bg-white rounded-2xl sm:flex-col">
-							<div className="flex-1 flex flex-col gap-5 ">
+							<div className="flex-1 flex flex-col gap-5 justify-center">
 								<div className="flex justify-center">
-									<div className="flex justify-center" style={divStyle}>
+									<div className="flex justify-center">
+										{errorMessage && (
+											<div className="text-red-500 text-center font-bold">
+												{errorMessage}
+											</div>
+										)}
+
 										{QRCodeUrl && (
 											<img
 												src={`${BASE_URL}${QRCodeUrl}`}
@@ -265,7 +307,7 @@ const Home = () => {
 									</p>
 								</div>
 							</div>
-							<div className="flex-1 flex flex-col gap-5">
+							<div className="flex-1 flex flex-col gap-3">
 								<div className="text-[24px]">
 									<p className="font-bold">
 										{selectedOption ? selectedOption : "No Course Selected"}

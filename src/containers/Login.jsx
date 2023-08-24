@@ -2,6 +2,12 @@ import React, {useState, useContext, useEffect} from "react";
 import axios from "axios";
 import AuthContext from "../context/AuthProvider";
 
+// Loading
+import {Dots} from "react-activity";
+import {Sentry} from "react-activity";
+import {Spinner} from "react-activity";
+import "react-activity/dist/library.css";
+
 const Login = () => {
 	const [staffId, setStaffId] = useState("");
 	const [password, setPassword] = useState("");
@@ -31,6 +37,8 @@ const Login = () => {
 		}
 
 		try {
+			setIsLoading(true);
+
 			const response = await axios.post(
 				"https://jkd6735.pythonanywhere.com/api/auth/lecturer/login/",
 				// "http://127.0.0.1:8000/api/auth/lecturer/login/",
@@ -38,7 +46,7 @@ const Login = () => {
 					lecturer_id: staffId,
 					pin: password,
 
-					// lecturer_id: "10824603", // Hardcoded staffId
+					// lecturer_id: "10826194", // Hardcoded staffId
 					// pin: "12345", // Hardcoded password
 				},
 				{
@@ -65,7 +73,7 @@ const Login = () => {
 				setTimeout(() => {
 					// Redirect
 					window.location.href = "/home";
-				}, 2000);
+				}, 1000);
 			}
 		} catch (error) {
 			// Handle login error
@@ -133,12 +141,43 @@ const Login = () => {
 						{/* Display the error message if it's not empty */}
 						{errorMessage && <div className="text-red-500">{errorMessage}</div>}
 
-						{/* Button */}
+						{/* Button
 						{isLoading ? (
-							<div className="text-primary text-center my-2">Logging in...</div>
+							// <div className="text-primary text-center my-2">Logging in...</div>
+
+							<Sentry className="" />
 						) : (
 							<button onClick={handleSubmit} className="my-10">
 								Login
+							</button>
+						)} */}
+
+						{/* Button }
+						{/* {isLoading ? (
+							<div className="flex gap-3 text-center items-center justify-center my-2">
+								<div>
+									<Sentry className="mx-auto" /> 
+								</div>
+								<p>Logging in...</p>
+							</div>
+						) : (
+							<button onClick={handleSubmit} className="my-10">
+								Login
+							</button>
+
+						)} */}
+
+						{/* Button */}
+						{isLoading ? (
+							<button className="flex gap-3 text-center items-center justify-center">
+								<div>
+									<Spinner className="mx-auto" size={20} />
+								</div>
+								<p>Logging in...</p>
+							</button>
+						) : (
+							<button onClick={handleSubmit} className="my-10">
+								{isLoading ? "Logging in..." : "Login"}
 							</button>
 						)}
 					</form>
