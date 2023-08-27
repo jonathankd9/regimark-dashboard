@@ -1,8 +1,6 @@
 import React, {useContext} from "react";
-import Logo from "./../assets/logo.png";
 import Profile from "./../assets/profile.png";
 import {NavLink} from "react-router-dom";
-
 import AuthContext from "../context/AuthProvider";
 import Logout from "./../assets/sidebar/Logout.svg";
 
@@ -23,7 +21,7 @@ const Topbar = () => {
 	const formattedDate = today.toLocaleDateString(undefined, options);
 
 	return (
-		<div className="flex p-4 bg-white justify-between items-center rounded-2xl">
+		<div className="flex px-10 py-5 bg-white justify-between items-center rounded-2xl">
 			<div className="flex gap-5 items-center">
 				<NavLink to="/profile">
 					<img
@@ -47,9 +45,10 @@ const Topbar = () => {
 
 				<h1 className="md:hidden text-center">Screen title </h1>
 			</div>
-			<div className="text-neutral-700 text-[24px] font-medium sm:hidden">
+			<div className="text-neutral-700 text-[24px] flex font-medium">
 				{formattedDate}
 			</div>
+
 			<div className="rounded-full p-3 hover:bg-gray-800 bg-[#e5e5e5]">
 				<img className="w-8 h-8 " src={Logout} onClick={handleLogout} alt="" />
 			</div>

@@ -1,6 +1,6 @@
 import React from "react";
 import {Sidebar, Topbar} from "../components";
-import User from "./../assets/user.svg";
+import ProfileIcon from "./../assets/bigprofile.png";
 
 const Profile = () => {
 	const userData = JSON.parse(localStorage.getItem("userData"));
@@ -20,7 +20,7 @@ const Profile = () => {
 
 				{/* Lecturer profile */}
 				<div className="text-center flex flex-col flex-grow bg-white rounded-2xl justify-center items-center min-h-screen">
-					<img src={User} alt="" />
+					<img src={ProfileIcon} alt="" />
 					<div className="my-3">
 						<p class="text-neutral-400 text-xl font-normal ">Name</p>
 						<p class="text-stone-900 text-2xl font-bold">

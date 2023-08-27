@@ -13,7 +13,7 @@ import AuthContext from "../context/AuthProvider";
 const Sidebar = () => {
 	const {handleLogout} = useContext(AuthContext);
 	return (
-		<div className="h-full w-full flex relative justify-start bg-white md:flex flex-col rounded-2xl sm:hidden">
+		<div className="px-5 h-full w-full flex relative justify-start bg-white md:flex flex-col rounded-2xl sm:hidden">
 			<div className="p-4 flex justify-center mt-5 mb-10">
 				<img src={Logo} alt="" />
 			</div>
@@ -51,33 +51,13 @@ const Sidebar = () => {
 							Reports & Statistics
 						</NavLink>
 					</li>
-				</ul>
-			</nav>
 
-			<nav className="">
-				<ul className="space-y-2">
-					<li>
-						<NavLink
-							to="/profile"
-							className="flex gap-2 items-center p-4 hover:bg-gray-800 hover:text-white">
-							<img className="w-8 h-8" src={User} alt="" />
-							Profile
-						</NavLink>
-					</li>
 					<li>
 						<NavLink
 							to="/help"
 							className="flex gap-2 items-center  p-4 hover:bg-gray-800 hover:text-white">
 							<img className="w-8 h-8" src={Help} alt="" />
 							Help & Information
-						</NavLink>
-					</li>
-					<li>
-						<NavLink
-							onClick={handleLogout}
-							className="flex gap-2 items-center p-4 hover:bg-gray-800 hover:text-white">
-							<img className="w-8 h-8" src={Logout} alt="" />
-							Logout
 						</NavLink>
 					</li>
 				</ul>
