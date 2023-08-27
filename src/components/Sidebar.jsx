@@ -27,14 +27,14 @@ const Sidebar = () => {
 							Dashboard
 						</NavLink>
 					</li>
-					<li>
+					{/* <li>
 						<NavLink
 							to="/courses"
 							className="flex gap-2 items-center p-4 hover:bg-gray-800 hover:text-white">
 							<img className="w-8 h-8" src={Book} alt="" />
 							Course Mangt.
 						</NavLink>
-					</li>
+					</li> */}
 					<li>
 						<NavLink
 							to="/history"
