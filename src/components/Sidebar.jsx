@@ -13,12 +13,11 @@ import AuthContext from "../context/AuthProvider";
 const Sidebar = () => {
 	const {handleLogout} = useContext(AuthContext);
 	return (
-		<div className="fixed min-h-screen bg-white w-80 md:flex flex-col rounded-2xl sm:hidden">
-			<div className="p-4 flex justify-center">
-				{/* <h1 className="text-primary text-xl font-bold">My Sidebar</h1> */}
+		<div className="h-full w-full flex relative justify-start bg-white md:flex flex-col rounded-2xl sm:hidden">
+			<div className="p-4 flex justify-center mt-5 mb-10">
 				<img src={Logo} alt="" />
 			</div>
-			<nav className="flex-grow">
+			<nav className="">
 				<ul className="space-y-2">
 					<li>
 						<NavLink

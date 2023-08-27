@@ -6,17 +6,20 @@ const Profile = () => {
 	const userData = JSON.parse(localStorage.getItem("userData"));
 
 	return (
-		<div className="flex gap-5 md:m-5 sm:mt-5 sm:mr-5">
-			<div className="">
+		<div className="flex gap-5 flex-row md:m-5 sm:mt-5 sm:mr-5">
+			{/* Sidebar */}
+			<div className="flex md:w-[20%] justify-center">
 				<Sidebar />
 			</div>
-			<div className="flex flex-col gap-5 w-full">
+
+			<div className="flex flex-col md:w-[80%] gap-5 sm:w-full">
+				{/* Topbar section */}
 				<div className="">
 					<Topbar />
 				</div>
 
 				{/* Lecturer profile */}
-				<div className="text-center md:ml-80 flex flex-col flex-grow bg-white rounded-2xl justify-center items-center h-screen">
+				<div className="text-center flex flex-col flex-grow bg-white rounded-2xl justify-center items-center min-h-screen">
 					<img src={User} alt="" />
 					<div className="my-3">
 						<p class="text-neutral-400 text-xl font-normal ">Name</p>

@@ -212,17 +212,20 @@ const Home = () => {
 	];
 
 	return (
-		<div className="flex gap-5 md:m-5 sm:mt-5 sm:mr-5">
-			<div className="">
+		<div className="flex gap-5 flex-row md:m-5 sm:mt-5 sm:mr-5">
+			{/* Sidebar */}
+			<div className="flex md:w-[20%] justify-center">
 				<Sidebar />
 			</div>
-			<div className="flex flex-col gap-5 ">
+
+			<div className="flex flex-col md:w-[80%] gap-5 sm:w-full">
+				{/* Topbar section */}
 				<div className="">
 					<Topbar />
 				</div>
 
 				{/* Inside contents */}
-				<div className="md:ml-80">
+				<div className="flex gap-5 mb-5 min-h-screen sm:flex-col">
 					<div className="flex gap-5 mb-5 md:flex-row sm:flex-col ">
 						{/* Left Section */}
 						<div className="p-10 basis-2/5 flex-col gap-y-4 h-4/12 bg-white rounded-2xl">
