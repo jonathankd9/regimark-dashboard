@@ -1,6 +1,16 @@
 import React from "react";
 import {Sidebar, Topbar} from "../components";
 
+const data = [
+	{id: 1, name: "John Doe", age: 25, city: "New York", country: "USA"},
+	{id: 2, name: "Jane Smith", age: 30, city: "London", country: "UK"},
+	{id: 3, name: "Bob Johnson", age: 35, city: "Paris", country: "France"},
+	{id: 3, name: "Bob Johnson", age: 35, city: "Paris", country: "France"},
+	{id: 3, name: "Bob Johnson", age: 35, city: "Paris", country: "France"},
+	{id: 3, name: "Bob Johnson", age: 35, city: "Paris", country: "France"},
+	{id: 3, name: "Bob Johnson", age: 35, city: "Paris", country: "France"},
+];
+
 const History = () => {
 	return (
 		<div className="flex gap-5 flex-row md:m-5 sm:mt-5 sm:mr-5">
@@ -17,8 +27,51 @@ const History = () => {
 
 				{/* History */}
 
-				<div className="flex flex-grow bg-white rounded-2xl justify-center items-center min-h-screen">
-					<h1 className="text-primary">History Here!</h1>
+				<div className="px-10 pt-5 flex flex-col flex-grow bg-white rounded-2xl min-h-screen">
+					{/* Third Section */}
+					<h1>Recent Attendance</h1>
+					<table className="min-w-full bg-white">
+						<thead>
+							<tr>
+								<th className="py-3 px-4 border-b border-gray-200 font-bold uppercase">
+									ID
+								</th>
+								<th className="py-3 px-4 border-b border-gray-200 font-bold uppercase">
+									Name
+								</th>
+								<th className="py-3 px-4 border-b border-gray-200 font-bold uppercase">
+									Age
+								</th>
+								<th className="py-3 px-4 border-b border-gray-200 font-bold uppercase">
+									City
+								</th>
+								<th className="py-3 px-4 border-b border-gray-200 font-bold uppercase">
+									Country
+								</th>
+							</tr>
+						</thead>
+						<tbody>
+							{data.map((item) => (
+								<tr key={item.id}>
+									<td className="py-3 px-4 border-b border-gray-200">
+										{item.id}
+									</td>
+									<td className="py-3 px-4 border-b border-gray-200">
+										{item.name}
+									</td>
+									<td className="py-3 px-4 border-b border-gray-200">
+										{item.age}
+									</td>
+									<td className="py-3 px-4 border-b border-gray-200">
+										{item.city}
+									</td>
+									<td className="py-3 px-4 border-b border-gray-200">
+										{item.country}
+									</td>
+								</tr>
+							))}
+						</tbody>
+					</table>
 				</div>
 			</div>
 		</div>
