@@ -95,7 +95,7 @@ const Login = () => {
 			<div className="bg-white md:w-3/5 rounded-2xl">
 				<div className="bg-primary rounded-t-2xl py-5">
 					<h1 className="text-white text-center md:text-[36px] sm:text-2xl">
-						QRMark - Dashboard
+						regiMark - Dashboard
 					</h1>
 				</div>
 
