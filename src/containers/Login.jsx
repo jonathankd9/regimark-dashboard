@@ -66,7 +66,9 @@ const Login = () => {
 			localStorage.setItem("userData", JSON.stringify(Data));
 
 			setUserData(Data);
-			const token = response.data.token;
+
+			// Storing token
+			const {token} = response.data;
 			localStorage.setItem("token", token);
 			if (localStorage.token) {
 				setIsAuth(true);

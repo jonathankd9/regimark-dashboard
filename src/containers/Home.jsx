@@ -4,6 +4,7 @@ import QRContainer from "./../assets/qr-code-container.png";
 import axios from "axios";
 import html2canvas from "html2canvas";
 import jsPDF from "jspdf";
+import AuthContext from "../context/AuthProvider";
 
 // Loading
 import {Dots} from "react-activity";
@@ -12,6 +13,8 @@ import {Spinner} from "react-activity";
 import "react-activity/dist/library.css";
 
 const Home = () => {
+	const token = localStorage.getItem("token");
+
 	const [isLoading, setIsLoading] = useState(false); // State to manage loading state
 
 	const BASE_URL = "https://jkd6735.pythonanywhere.com";
@@ -131,17 +134,32 @@ const Home = () => {
 		}
 	}, [timerRunning, timeLeft]);
 
+	// const [courseId, setCourseId] = useState("");
+	const [courseId, setCourseId] = useState(
+		localStorage.getItem("courseId") || ""
+	);
+
+	const lecturerId = userData?.user_info.id;
+
 	const handleGenerateQRCode = async () => {
 		if (!selectedOption) {
-			// If no option is selected, do nothing
+			alert("Please select an option before generating a QR code.");
 			return;
 		}
 		try {
 			setIsLoading(true);
 
+			localStorage.setItem("courseId", courseId);
+
+			console.log(lecturerId);
+
+			console.log(courseId);
+			// Retrieve the token from localStorage
+			const token = localStorage.getItem("token");
+
 			const requestData = {
-				lecturer: 1, // Replace with the actual lecturer value
-				course: 1, // Replace with the actual course value
+				lecturer: lecturerId,
+				course: courseId,
 			};
 
 			const response = await axios.post(
@@ -149,23 +167,34 @@ const Home = () => {
 				requestData,
 
 				{
-					headers: {},
+					headers: {
+						Authorization: `Token ${token}`, // Include the token in the headers
+					},
 				}
 			);
 
 			console.log("API Response:", response.data);
 
-			// Extract the token from the response, cool
-			const token = response.data.token;
+			// // Extract the token from the response, cool
+			const newToken = response.data.token;
 
-			// Set the token in your state or wherever you want to store it
-			localStorage.setItem("token", token);
+			// // Set the token in your state or wherever you want to store it
+			// Update the token in localStorage (if it changes)
+			if (newToken) {
+				localStorage.setItem("token", newToken);
+			}
 
 			console.log(response.data.data);
 
 			// const qrCodeUrl = response.data.data.qr_code;
 			const qrCodeUrl = response.data.data;
 			setQRCodeUrl(qrCodeUrl);
+
+			// Clear the error message since QR code generation was successful
+			setErrorMessage("");
+
+			// Save the generated QR code data in localStorage
+			localStorage.setItem("qrcodeData", qrCodeUrl);
 
 			// Log the QR code data
 			console.log(qrCodeUrl);
@@ -176,22 +205,55 @@ const Home = () => {
 			console.error("Error generating QR code:", error);
 			console.log("Response data:", error.response.data);
 
-			setErrorMessage("QR Code failed to generate."); // Set error message on login failure
+			// Set the error message
+			setErrorMessage("QR Code failed to generate.");
+
+			// Clear the QR code when an error occurs
+			setQRCodeUrl("");
 		} finally {
 			setIsLoading(false);
 		}
 	};
 
+	const [selectedId, setSelectedId] = useState("");
 	const [selectedOption, setSelectedOption] = useState("");
 	const [courseTitle, setCourseTitle] = useState("");
 	const [courseCode, setcourseCode] = useState("");
+	const [courseselected, setcourseSelected] = useState("");
 
 	const handleSelectChange = (event) => {
-		setSelectedOption(event.target.value);
+		const selectedValue = event.target.value;
+		setSelectedOption(selectedValue);
+
+		const parts = selectedValue.split("-");
+		const firstPart = parts[0];
+		// Extract the course ID from the selected option
+		const courseId = firstPart; // The course ID is the selected value
+
+		const secondPart = parts[1];
+		console.log(secondPart);
+
+		const thirdPart = parts[2];
+		console.log(thirdPart);
+
+		const courseselected = secondPart + thirdPart;
+		console.log(courseselected);
+		setcourseSelected(courseselected);
+
+		// Now you have the courseId to use as needed
+		console.log("Selected Course ID:", courseId);
+
+		// Update selectedId with the course ID
+		setSelectedId(courseId);
+		console.log(courseId);
+
+		// Save the selected option and courseSelected to localStorage
+		localStorage.setItem("selectedOption", selectedValue);
+		localStorage.setItem("courseSelected", courseselected);
 
 		// Update courseTitle based on the selected option
 		const selectedCourse = userData?.courses.find((course) => {
-			return `${course.code} - ${course.title}` === event.target.value;
+			return `${course.code} - ${course.title}` === selectedValue;
 		});
 
 		if (selectedCourse) {
@@ -199,7 +261,28 @@ const Home = () => {
 		} else {
 			setCourseTitle(""); // Reset to empty if no course is selected
 		}
+		// Set courseId in the component state if needed
+		setCourseId(courseId);
 	};
+
+	// When the component loads, retrieve the values from localStorage (if they exist)
+	useEffect(() => {
+		const savedSelectedOption = localStorage.getItem("selectedOption");
+		const savedCourseSelected = localStorage.getItem("courseSelected");
+		const savedQRCodeData = localStorage.getItem("qrcodeData");
+
+		if (savedSelectedOption) {
+			setSelectedOption(savedSelectedOption);
+		}
+
+		if (savedCourseSelected) {
+			setcourseSelected(savedCourseSelected);
+		}
+
+		if (savedQRCodeData) {
+			setQRCodeUrl(savedQRCodeData);
+		}
+	}, []); // Empty dependency array to run this effect only once when the component loads
 
 	return (
 		<div className="flex gap-5 flex-row md:m-5 sm:mt-5 sm:mr-5">
@@ -234,9 +317,12 @@ const Home = () => {
 									onChange={handleSelectChange}
 									className="text-[20px] w-full h-16 p-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-2 focus:ring-blue-500">
 									<option value="Select an option">Select an option</option>
-									{userData?.courses.map((course, index) => (
-										<option key={index}>
-											{course.code} - {course.title}{" "}
+									{userData?.courses.map((course) => (
+										// <option key={course.id} value={course.id}>
+										<option
+											key={course.id}
+											value={`${course.id}- ${course.code} - ${course.title}`}>
+											{course.code} - {course.title}
 										</option>
 									))}
 								</select>
@@ -246,6 +332,25 @@ const Home = () => {
 									</p>
 								)}
 							</div>
+
+							{/* <div className="mb-5">
+								<select
+									value={selectedOption}
+									onChange={handleSelectChange}
+									className="text-[20px] w-full h-16 p-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-2 focus:ring-blue-500">
+									<option value="">Select an option</option>
+									{userData?.courses.map((course) => (
+										<option key={course.id} value={course.id}>
+											{course.code} - {course.title}
+										</option>
+									))}
+								</select>
+								{selectedOption && (
+									<p className="text-green-600 mt-4">
+										Selected Course ID: {selectedOption}
+									</p>
+								)}
+							</div> */}
 							<div>
 								{/* <button onClick={handleGenerateQRCode}>Generate</button> */}
 
@@ -303,7 +408,8 @@ const Home = () => {
 							<div className="flex-1 flex flex-col gap-3">
 								<div className="text-[24px]">
 									<p className="font-bold">
-										{selectedOption ? selectedOption : "No Course Selected"}
+										{/* {selectedOption ? selectedOption : "No Course Selected"} */}
+										{courseselected ? courseselected : "No Course Selected"}
 									</p>
 									<p>{formattedDate}</p>
 								</div>
