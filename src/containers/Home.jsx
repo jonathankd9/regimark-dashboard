@@ -11,6 +11,7 @@ import {Dots} from "react-activity";
 import {Sentry} from "react-activity";
 import {Spinner} from "react-activity";
 import "react-activity/dist/library.css";
+import Download from "../../src/assets/download.svg";
 
 const Home = () => {
 	const token = localStorage.getItem("token");
@@ -123,6 +124,29 @@ const Home = () => {
 	const qrCodeRef = useRef(null);
 	const [errorMessage, setErrorMessage] = useState(""); // State to hold the error message
 
+	// When the component loads, retrieve the values from localStorage (if they exist)
+	useEffect(() => {
+		const savedSelectedOption = localStorage.getItem("selectedOption");
+		const savedCourseSelected = localStorage.getItem("courseSelected");
+		const savedQRCodeData = localStorage.getItem("qrcodeData");
+		const savedcourseCode = localStorage.getItem("courseCode");
+
+		if (savedSelectedOption) {
+			setSelectedOption(savedSelectedOption);
+		}
+
+		if (savedCourseSelected) {
+			setcourseSelected(savedCourseSelected);
+		}
+
+		if (savedQRCodeData) {
+			setQRCodeUrl(savedQRCodeData);
+		}
+		if (savedcourseCode) {
+			setcourseCode(savedcourseCode);
+		}
+	}, []); // Empty dependency array to run this effect only once when the component loads
+
 	useEffect(() => {
 		if (timerRunning && timeLeft > 0) {
 			const timer = setTimeout(() => {
@@ -131,6 +155,10 @@ const Home = () => {
 
 			// Clean up the timer when the component is unmounted or the QR code is not generated
 			return () => clearTimeout(timer);
+		} else if (timeLeft === 0) {
+			// Timer has run out, clear the QR code
+			localStorage.removeItem("qrcodeData");
+			setQRCodeUrl(""); // Reset the QRCodeUrl state
 		}
 	}, [timerRunning, timeLeft]);
 
@@ -219,19 +247,23 @@ const Home = () => {
 	const [selectedOption, setSelectedOption] = useState("");
 	const [courseTitle, setCourseTitle] = useState("");
 	const [courseCode, setcourseCode] = useState("");
+	const [selectedCourseCode, setSelectedCourseCode] = useState("");
 	const [courseselected, setcourseSelected] = useState("");
 
 	const handleSelectChange = (event) => {
 		const selectedValue = event.target.value;
 		setSelectedOption(selectedValue);
 
-		const parts = selectedValue.split("-");
+		// const parts = selectedValue.split("-");
+		const parts = selectedValue.split("-").map((part) => part.trim());
 		const firstPart = parts[0];
 		// Extract the course ID from the selected option
 		const courseId = firstPart; // The course ID is the selected value
 
 		const secondPart = parts[1];
 		console.log(secondPart);
+		setSelectedCourseCode(secondPart);
+		// console.log(courseCode);
 
 		const thirdPart = parts[2];
 		console.log(thirdPart);
@@ -250,6 +282,7 @@ const Home = () => {
 		// Save the selected option and courseSelected to localStorage
 		localStorage.setItem("selectedOption", selectedValue);
 		localStorage.setItem("courseSelected", courseselected);
+		localStorage.setItem("Course Code", selectedCourseCode);
 
 		// Update courseTitle based on the selected option
 		const selectedCourse = userData?.courses.find((course) => {
@@ -265,24 +298,50 @@ const Home = () => {
 		setCourseId(courseId);
 	};
 
-	// When the component loads, retrieve the values from localStorage (if they exist)
-	useEffect(() => {
-		const savedSelectedOption = localStorage.getItem("selectedOption");
-		const savedCourseSelected = localStorage.getItem("courseSelected");
-		const savedQRCodeData = localStorage.getItem("qrcodeData");
+	// Generation of codes
+	const generateCodes = async (token) => {
+		// Prepare the request data
+		const requestData = {
+			course_code: selectedCourseCode,
+		};
+		const Token = localStorage.getItem("token");
 
-		if (savedSelectedOption) {
-			setSelectedOption(savedSelectedOption);
-		}
+		try {
+			console.log(selectedCourseCode);
 
-		if (savedCourseSelected) {
-			setcourseSelected(savedCourseSelected);
-		}
+			console.log(requestData);
 
-		if (savedQRCodeData) {
-			setQRCodeUrl(savedQRCodeData);
+			console.log(Token);
+			const response = await axios.post(`${BASE_URL}/api/codes/`, requestData, {
+				headers: {
+					Authorization: `Token ${token}`, // Concatenate the token
+				},
+			});
+
+			// Return the response data, which may contain generated codes
+			console.log(response.data);
+			return response.data;
+		} catch (error) {
+			// Handle any errors that occur during the request
+			console.error("Error generating codes:", error);
+			throw error;
 		}
-	}, []); // Empty dependency array to run this effect only once when the component loads
+	};
+
+	// Getting codes
+	// useEffect(() => {
+	// 	axios
+	// 		.get(`${BASE_URL}api/codes/`)
+	// 		.then((response) => {
+	// 			const newcodes = response.data.codes;
+	// 			// setCourses(newcourses);
+	// 			console.log(newcodes);
+	// 		})
+	// 		.catch((error) => {
+	// 			console.error("Failed to retrieve courses:", error);
+	// 			// Handle error if needed
+	// 		});
+	// }, []);
 
 	return (
 		<div className="flex gap-5 flex-row md:m-5 sm:mt-5 sm:mr-5">
@@ -422,7 +481,17 @@ const Home = () => {
 					</div>
 					<div className="px-10 pt-5 flex flex-col flex-grow bg-white rounded-2xl">
 						{/* Third Section */}
-						<h1>Recent Attendance</h1>
+						<div className="flex flex-row items-center">
+							<div className="mr-5">
+								<p className="font-bold text-2xl">Unique Attendance Codes</p>
+							</div>
+
+							<div className="mr-5">
+								<button onClick={generateCodes}>Tap To Generate</button>
+							</div>
+
+							<img src={Download} className="w-12 h-12" alt="" />
+						</div>
 					</div>
 				</div>
 			</div>
