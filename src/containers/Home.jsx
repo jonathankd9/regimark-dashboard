@@ -17,6 +17,7 @@ const Home = () => {
 	const token = localStorage.getItem("token");
 
 	const [isLoading, setIsLoading] = useState(false); // State to manage loading state
+	const [isGenerating, setIsGenerating] = useState(false); // State to manage loading state
 
 	const BASE_URL = "https://jkd6735.pythonanywhere.com";
 
@@ -190,6 +191,8 @@ const Home = () => {
 				course: courseId,
 			};
 
+			console.log(requestData);
+
 			const response = await axios.post(
 				`${BASE_URL}/api/dashboard/lecturer/generate-qrcode/`,
 				requestData,
@@ -307,41 +310,60 @@ const Home = () => {
 		const Token = localStorage.getItem("token");
 
 		try {
+			setIsGenerating(true);
 			console.log(selectedCourseCode);
+			localStorage.setItem("Course Code", selectedCourseCode);
 
 			console.log(requestData);
 
 			console.log(Token);
+
 			const response = await axios.post(`${BASE_URL}/api/codes/`, requestData, {
 				headers: {
-					Authorization: `Token ${token}`, // Concatenate the token
+					Authorization: `Token ${Token}`, // Concatenate the token
 				},
 			});
 
 			// Return the response data, which may contain generated codes
 			console.log(response.data);
+			alert("Codes Generated for Students");
 			return response.data;
 		} catch (error) {
 			// Handle any errors that occur during the request
 			console.error("Error generating codes:", error);
 			throw error;
+		} finally {
+			setIsGenerating(false);
 		}
 	};
 
-	// Getting codes
-	// useEffect(() => {
-	// 	axios
-	// 		.get(`${BASE_URL}api/codes/`)
-	// 		.then((response) => {
-	// 			const newcodes = response.data.codes;
-	// 			// setCourses(newcourses);
-	// 			console.log(newcodes);
-	// 		})
-	// 		.catch((error) => {
-	// 			console.error("Failed to retrieve courses:", error);
-	// 			// Handle error if needed
-	// 		});
-	// }, []);
+	const [generatedcodes, setGeneratedCodes] = useState([]);
+
+	useEffect(() => {
+		const fetchCodes = () => {
+			axios
+				.get(`${BASE_URL}/api/codes/`)
+				.then((response) => {
+					const newCodes = response.data.codes;
+					setGeneratedCodes(newCodes);
+				})
+				.catch((error) => {
+					console.error("Failed to retrieve codes:", error);
+					// Handle error if needed
+				});
+		};
+
+		// Fetch codes initially when the component mounts
+		fetchCodes();
+
+		// Set up an interval to fetch codes at a specified interval (e.g., every 10 seconds)
+		const interval = setInterval(fetchCodes, 2000); // Fetch every 10 seconds
+
+		// Clear the interval when the component unmounts to prevent memory leaks
+		return () => clearInterval(interval);
+	}, []);
+
+	// Initializing attendance
 
 	return (
 		<div className="flex gap-5 flex-row md:m-5 sm:mt-5 sm:mr-5">
@@ -392,24 +414,6 @@ const Home = () => {
 								)}
 							</div>
 
-							{/* <div className="mb-5">
-								<select
-									value={selectedOption}
-									onChange={handleSelectChange}
-									className="text-[20px] w-full h-16 p-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-2 focus:ring-blue-500">
-									<option value="">Select an option</option>
-									{userData?.courses.map((course) => (
-										<option key={course.id} value={course.id}>
-											{course.code} - {course.title}
-										</option>
-									))}
-								</select>
-								{selectedOption && (
-									<p className="text-green-600 mt-4">
-										Selected Course ID: {selectedOption}
-									</p>
-								)}
-							</div> */}
 							<div>
 								{/* <button onClick={handleGenerateQRCode}>Generate</button> */}
 
@@ -481,16 +485,36 @@ const Home = () => {
 					</div>
 					<div className="px-10 pt-5 flex flex-col flex-grow bg-white rounded-2xl">
 						{/* Third Section */}
-						<div className="flex flex-row items-center">
+						<div className="flex flex-row items-center mb-5">
 							<div className="mr-5">
 								<p className="font-bold text-2xl">Unique Attendance Codes</p>
 							</div>
 
 							<div className="mr-5">
-								<button onClick={generateCodes}>Tap To Generate</button>
+								{/* <button onClick={generateCodes}>Generate Codes</button> */}
+								{isGenerating ? (
+									<button className="flex gap-3 text-center items-center justify-center">
+										<div>
+											<Sentry className="mx-auto" size={20} />
+										</div>
+										<p>Generating...</p>
+									</button>
+								) : (
+									<button onClick={generateCodes} className="my-5">
+										{isGenerating ? "Generating Codes" : "Generate Codes"}
+									</button>
+								)}
 							</div>
 
 							<img src={Download} className="w-12 h-12" alt="" />
+						</div>
+
+						<div className="flex flex-wrap gap-5">
+							{generatedcodes.map((generatedcode) => (
+								<div className="" key={generatedcode.id}>
+									<div className="">{generatedcode.code}</div>
+								</div>
+							))}
 						</div>
 					</div>
 				</div>

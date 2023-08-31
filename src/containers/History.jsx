@@ -1,5 +1,6 @@
-import React from "react";
+import React, {useState, useEffect} from "react";
 import {Sidebar, Topbar} from "../components";
+import axios from "axios";
 
 const data = [
 	{id: 1, name: "John Doe", age: 25, city: "New York", country: "USA"},
@@ -12,6 +13,36 @@ const data = [
 ];
 
 const History = () => {
+	const BASE_URL = "https://jkd6735.pythonanywhere.com";
+
+	const [newattendance, setNewAttendance] = useState("");
+
+	const token = localStorage.getItem("token");
+
+	console.log(token);
+
+	// Viewing attendance
+	useEffect(() => {
+		axios
+			.get(`${BASE_URL}/api/attendance/`, {
+				params: {
+					courseCode: selectedCourseCode,
+				},
+				headers: {
+					Authorization: `Token ${token}`,
+				},
+			})
+			.then((response) => {
+				const newattendance = response.data.attendances;
+				console.log(newattendance);
+				setNewAttendance(newattendance);
+			})
+			.catch((error) => {
+				console.error("Failed to retrieve attendances:", error);
+				// Handle error if needed
+			});
+	}, []);
+
 	return (
 		<div className="flex gap-5 flex-row md:m-5 sm:mt-5 sm:mr-5">
 			{/* Sidebar */}
