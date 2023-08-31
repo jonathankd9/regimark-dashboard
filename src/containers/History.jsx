@@ -22,26 +22,26 @@ const History = () => {
 	console.log(token);
 
 	// Viewing attendance
-	useEffect(() => {
-		axios
-			.get(`${BASE_URL}/api/attendance/`, {
-				params: {
-					courseCode: selectedCourseCode,
-				},
-				headers: {
-					Authorization: `Token ${token}`,
-				},
-			})
-			.then((response) => {
-				const newattendance = response.data.attendances;
-				console.log(newattendance);
-				setNewAttendance(newattendance);
-			})
-			.catch((error) => {
-				console.error("Failed to retrieve attendances:", error);
-				// Handle error if needed
-			});
-	}, []);
+	// useEffect(() => {
+	// 	axios
+	// 		.get(`${BASE_URL}/api/attendance/`, {
+	// 			params: {
+	// 				courseCode: selectedCourseCode,
+	// 			},
+	// 			headers: {
+	// 				Authorization: `Token ${token}`,
+	// 			},
+	// 		})
+	// 		.then((response) => {
+	// 			const newattendance = response.data.attendances;
+	// 			console.log(newattendance);
+	// 			setNewAttendance(newattendance);
+	// 		})
+	// 		.catch((error) => {
+	// 			console.error("Failed to retrieve attendances:", error);
+	// 			// Handle error if needed
+	// 		});
+	// }, []);
 
 	return (
 		<div className="flex gap-5 flex-row md:m-5 sm:mt-5 sm:mr-5">

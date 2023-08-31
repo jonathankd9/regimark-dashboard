@@ -42,8 +42,6 @@ const Topbar = () => {
 						{/* {userData?.user_info.first_name} */}
 					</p>
 				</div>
-
-				<h1 className="md:hidden text-center">Screen title </h1>
 			</div>
 			<div className="text-neutral-700 text-[24px] flex font-medium">
 				{formattedDate}
